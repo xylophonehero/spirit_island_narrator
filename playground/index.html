@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="color-scheme" content="dark" />
-<title>Spirit Island Narrator — Exercise 01</title>
+<title>Spirit Island Narrator — Build-up Walkthrough</title>
 <style>
   :root {
     --bg: #0b1020;
@@ -16,195 +16,241 @@
     --pass: #6fd394;
     --fail: #f08a8a;
     --accent: #5f6fc4;
+    --code-key: #9ecbff;
+    --code-str: #a8d5a2;
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
     background: radial-gradient(1200px 600px at 70% -10%, #1a2447 0%, var(--bg) 55%);
     color: var(--ink);
-    font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, sans-serif;
-    padding: 12px 12px calc(24px + env(safe-area-inset-bottom));
-    max-width: 860px;
+    font: 16px/1.55 ui-sans-serif, system-ui, -apple-system, sans-serif;
+    padding: 12px 14px calc(40px + env(safe-area-inset-bottom));
+    max-width: 760px;
     margin-inline: auto;
   }
   h1 {
     font-family: ui-serif, Georgia, serif;
     font-weight: 600;
-    font-size: 1.25rem;
-    letter-spacing: 0.02em;
+    font-size: 1.3rem;
     color: var(--moon);
-    margin: 8px 0 2px;
+    margin: 10px 0 2px;
   }
-  .sub { color: var(--dim); font-size: 0.85rem; margin: 0 0 14px; }
-  .bar { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
-  button {
-    background: var(--accent);
-    color: #fff;
-    border: 0;
-    border-radius: 10px;
-    padding: 12px 18px;
-    font-size: 1rem;
+  h2 {
+    font-family: ui-serif, Georgia, serif;
     font-weight: 600;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
+    font-size: 1.1rem;
+    color: var(--moon);
+    margin: 34px 0 6px;
+    padding-top: 10px;
+    border-top: 1px solid #24304f;
   }
-  button.secondary { background: var(--panel); color: var(--dim); border: 1px solid #2a3558; }
-  button:disabled { opacity: 0.5; }
-  #editor {
-    width: 100%;
-    min-height: 46vh;
+  .stepno { color: var(--dim); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; display: block; }
+  p { margin: 10px 0; }
+  .sub { color: var(--dim); font-size: 0.9rem; }
+  code { font-family: ui-monospace, Menlo, monospace; font-size: 0.85em; color: var(--code-key); }
+  pre {
     background: var(--panel-2);
-    color: var(--ink);
     border: 1px solid #24304f;
     border-radius: 12px;
     padding: 12px;
-    font: 13px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace;
-    resize: vertical;
-    white-space: pre;
     overflow-x: auto;
+    font: 12.5px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: var(--ink);
+    -webkit-overflow-scrolling: touch;
   }
-  #status { color: var(--dim); font-size: 0.85rem; min-height: 1.2em; margin: 6px 2px; }
-  #results { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
-  .group { color: var(--moon); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 8px; }
-  .test {
+  pre .new { color: var(--pass); }
+  nav {
+    display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0;
+  }
+  nav a {
+    color: var(--moon); text-decoration: none; font-size: 0.8rem;
+    background: var(--panel); border: 1px solid #2a3558; border-radius: 999px;
+    padding: 6px 12px;
+  }
+  .demo {
     background: var(--panel);
-    border: 1px solid #24304f;
-    border-radius: 10px;
+    border: 1px solid #2a3558;
+    border-radius: 14px;
+    padding: 14px;
+    margin: 14px 0;
+  }
+  .demo .label { color: var(--dim); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+  .statepill {
+    display: inline-block;
+    background: #1d2a4d;
+    border: 1px solid var(--accent);
+    color: var(--moon);
+    border-radius: 999px;
+    padding: 6px 14px;
+    font: 600 0.9rem ui-monospace, Menlo, monospace;
+    margin-bottom: 8px;
+    word-break: break-all;
+  }
+  .statepill.done { border-color: var(--fail); color: var(--fail); }
+  .ctx { font: 12px/1.5 ui-monospace, Menlo, monospace; color: var(--dim); margin: 4px 0 10px; }
+  .btns { display: flex; flex-wrap: wrap; gap: 8px; }
+  .demo button {
+    background: var(--accent); color: #fff; border: 0; border-radius: 10px;
+    padding: 11px 14px; font-size: 0.95rem; font-weight: 600;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .demo button:disabled { background: #232c48; color: #5a6285; }
+  .demo button.reset { background: transparent; border: 1px solid #2a3558; color: var(--dim); }
+  .note {
+    border-left: 3px solid var(--accent);
+    background: var(--panel);
+    border-radius: 0 10px 10px 0;
     padding: 10px 12px;
-    font-size: 0.9rem;
+    margin: 12px 0;
+    font-size: 0.92rem;
   }
-  .test.pass { border-color: #23543a; }
-  .test.fail { border-color: #5e2c2c; }
-  .test .mark { margin-right: 8px; }
-  .test .err {
-    display: block;
-    color: var(--fail);
-    font: 12px/1.4 ui-monospace, Menlo, monospace;
-    margin-top: 6px;
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
-  #summary { font-weight: 700; margin-top: 12px; }
-  #summary.allpass { color: var(--pass); }
-  details { margin: 10px 0; color: var(--dim); }
-  summary { cursor: pointer; color: var(--moon); }
-  .fatal {
-    background: #2a1620;
-    border: 1px solid #5e2c2c;
-    color: var(--fail);
-    border-radius: 10px;
-    padding: 12px;
-    font: 12px/1.4 ui-monospace, Menlo, monospace;
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
+  a { color: var(--moon); }
+  footer { margin-top: 40px; color: var(--dim); font-size: 0.85rem; }
 </style>
 </head>
 <body>
 <h1>Spirit Island Narrator</h1>
-<p class="sub">Exercise 01 — model one game round as an XState v5 machine. Edit, run, make all 10 tests green. Your code auto-saves in this browser. (No type-checking here — that lives in the repo. These tests check behavior.)</p>
+<p class="sub">A build-it-up walkthrough. Each step adds one idea to the game machine — read the code, then poke the live demo underneath it. No tests, no grades. (Prefer to experiment freely? The <a href="./practice.html">sandbox editor</a> is still there.)</p>
+<nav id="nav"></nav>
+<main id="steps"></main>
 
-<textarea id="editor" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></textarea>
+<footer>
+  Built with xstate 5.32.5 (the exact version in the repo). The agent step shows real
+  <code>@statelyai/agent@2.0.0-next.5</code> config, verified against its installed types.
+</footer>
 
-<div class="bar">
-  <button id="run">Run tests ▶</button>
-  <button id="reset" class="secondary">Reset to problem</button>
-  <button id="solution" class="secondary">Reveal solution…</button>
-</div>
-<div id="status">Loading toolchain…</div>
-<div id="results"></div>
-<div id="summary"></div>
+<script type="module">
+import { createMachine, createActor, setup, assign } from './vendor/xstate.js';
 
-<script type="text/plain" id="problem-code">/**
- * Exercise 01 — Model one Spirit Island round as a state machine.
- *
- * The round structure, straight from the rulebook:
- *
- *   spiritPhase → fastPowers → invaderPhase → slowPowers → timePasses → (next round)
- *                              └─ ravage → build → explore ─┘
- *
- * Your job — make every test green by:
- *
- * 1. Typing the machine in `setup({ types: { … } })`:
- *      context: { round: number; blightCount: number }
- *      events:  END_SPIRIT_PHASE | END_FAST_POWERS | RAVAGE | BUILD | EXPLORE
- *               | END_SLOW_POWERS | TIME_PASSES   (no payloads yet)
- *      input:   { startingBlight: number }
- *
- * 2. Implementing two named actions with `assign`:
- *      'addBlight'  — RAVAGE puts one blight on the island
- *      'nextRound'  — TIME_PASSES increments the round
- *
- * 3. Implementing one named guard:
- *      'islandWouldBeDestroyed' — true when the *next* blight would be the
- *      fifth (i.e. blightCount is already 4 or more)
- *
- * 4. Wiring the states:
- *      - initial context comes from input (round starts at 1)
- *      - invaderPhase is a NESTED state: ravage → build → explore
- *      - EXPLORE leaves the invaderPhase entirely, landing on slowPowers
- *      - RAVAGE first checks the guard: if the island would be destroyed,
- *        go to a top-level final state 'gameOver' (still adding the blight —
- *        the island falls as it burns). Otherwise add blight and move to build.
- *      - TIME_PASSES loops back to spiritPhase for the next round
- *
- * Hints (read one at a time, only when stuck):
- *
- * Hint 1: `setup({ types: { context: {} as …, events: {} as …, input: {} as … } })`
- *         — the `{} as Type` pattern is how XState v5 takes type-only params.
- *
- * Hint 2: `assign({ blightCount: ({ context }) => context.blightCount + 1 })`
- *         — import `assign` from 'xstate'. Reference actions by NAME in the
- *         machine config: `actions: 'addBlight'`.
- *
- * Hint 3: A guarded transition is an array — first match wins:
- *         RAVAGE: [
- *           { guard: 'islandWouldBeDestroyed', target: …, actions: … },
- *           { target: …, actions: … },
- *         ]
- *         Targeting a state OUTSIDE the nested parent needs an id ref:
- *         `target: '#gameRound.gameOver'`.
- */
-import { setup } from 'xstate';
+// ── step definitions ───────────────────────────────────────────────────
+const steps = [];
+const step = (title, html, code, demo) => steps.push({ title, html, code, demo });
 
-export const gameRoundMachine = setup({
-  types: {
-    // TODO: context, events, input
-  },
-  actions: {
-    // TODO: 'addBlight', 'nextRound'
-  },
-  guards: {
-    // TODO: 'islandWouldBeDestroyed'
-  },
-}).createMachine({
-  id: 'gameRound',
-  // TODO: context: ({ input }) => …
+step(
+  'The smallest possible machine',
+  `<p>A state machine is just: <strong>states</strong> the game can be in, and
+   <strong>events</strong> that move it between them. In XState you describe both as one
+   object. <code>initial</code> says where we start; <code>on</code> says which event
+   leads where.</p>
+   <p>Here's a round with only two phases. Note the shape: an event name on the left
+   (<code>END_SPIRIT_PHASE</code>), a target state on the right.</p>`,
+  `import { createMachine } from 'xstate';
+
+const machine = createMachine({
+  id: 'round',
   initial: 'spiritPhase',
   states: {
     spiritPhase: {
-      // TODO
+      on: { END_SPIRIT_PHASE: 'fastPowers' },
     },
-    // TODO: fastPowers, invaderPhase (nested!), slowPowers, timePasses, gameOver
+    fastPowers: {}, // nothing leaves this state — yet
   },
-});
-</script>
+});`,
+  () => ({
+    machine: createMachine({
+      id: 'round',
+      initial: 'spiritPhase',
+      states: {
+        spiritPhase: { on: { END_SPIRIT_PHASE: 'fastPowers' } },
+        fastPowers: {},
+      },
+    }),
+    events: ['END_SPIRIT_PHASE'],
+  }),
+);
 
-<script type="text/plain" id="solution-code">import { assign, setup } from 'xstate';
+step(
+  'All five phases of a round',
+  `<p>Now the whole rulebook loop: <code>spiritPhase → fastPowers → invaders → slowPowers
+   → timePasses</code>, and time passing loops back to the spirit phase.</p>
+   <p>Tap through a full round below. Try tapping an event out of order — <em>nothing
+   happens</em>. That's the core promise of a statechart: impossible moves are impossible
+   by construction, not by <code>if</code> statements scattered through your UI.</p>`,
+  `const machine = createMachine({
+  id: 'round',
+  initial: 'spiritPhase',
+  states: {
+    spiritPhase: { on: { END_SPIRIT_PHASE: 'fastPowers' } },
+    fastPowers:  { on: { END_FAST_POWERS: 'invaders' } },
+    invaders:    { on: { END_INVADERS: 'slowPowers' } },
+    slowPowers:  { on: { END_SLOW_POWERS: 'timePasses' } },
+    timePasses:  { on: { TIME_PASSES: 'spiritPhase' } }, // the loop
+  },
+});`,
+  () => ({
+    machine: createMachine({
+      id: 'round',
+      initial: 'spiritPhase',
+      states: {
+        spiritPhase: { on: { END_SPIRIT_PHASE: 'fastPowers' } },
+        fastPowers: { on: { END_FAST_POWERS: 'invaders' } },
+        invaders: { on: { END_INVADERS: 'slowPowers' } },
+        slowPowers: { on: { END_SLOW_POWERS: 'timePasses' } },
+        timePasses: { on: { TIME_PASSES: 'spiritPhase' } },
+      },
+    }),
+    events: ['END_SPIRIT_PHASE', 'END_FAST_POWERS', 'END_INVADERS', 'END_SLOW_POWERS', 'TIME_PASSES'],
+  }),
+);
 
-export const gameRoundMachine = setup({
+step(
+  'Context — data that rides along',
+  `<p>States answer "<em>where</em> are we?" — but the game also has numbers:
+   which round is it, how much blight is on the island. That's
+   <strong>context</strong>: one typed object of data that travels with the machine.</p>
+   <p>This is where XState v5's <code>setup()</code> comes in. You declare the
+   <em>types</em> first, then build the machine from them. The <code>{} as …</code>
+   pattern looks odd: it's a type-only hint — the object is never used at runtime,
+   TypeScript just reads its type.</p>
+   <p><code>input</code> is how the outside world seeds the context when the machine
+   starts — like props for a component.</p>`,
+  `import { setup } from 'xstate';
+
+const machine = setup({
   types: {
     context: {} as { round: number; blightCount: number },
-    events: {} as
-      | { type: 'END_SPIRIT_PHASE' }
-      | { type: 'END_FAST_POWERS' }
-      | { type: 'RAVAGE' }
-      | { type: 'BUILD' }
-      | { type: 'EXPLORE' }
-      | { type: 'END_SLOW_POWERS' }
-      | { type: 'TIME_PASSES' },
-    input: {} as { startingBlight: number },
+    input:   {} as { startingBlight: number },
   },
+}).createMachine({
+  id: 'round',
+  context: ({ input }) => ({
+    round: 1,
+    blightCount: input.startingBlight,
+  }),
+  initial: 'spiritPhase',
+  states: { /* …same five phases… */ },
+});`,
+  () => ({
+    machine: setup({}).createMachine({
+      id: 'round',
+      context: ({ input }) => ({ round: 1, blightCount: input.startingBlight }),
+      initial: 'spiritPhase',
+      states: {
+        spiritPhase: { on: { END_SPIRIT_PHASE: 'fastPowers' } },
+        fastPowers: { on: { END_FAST_POWERS: 'invaders' } },
+        invaders: { on: { END_INVADERS: 'slowPowers' } },
+        slowPowers: { on: { END_SLOW_POWERS: 'timePasses' } },
+        timePasses: { on: { TIME_PASSES: 'spiritPhase' } },
+      },
+    }),
+    events: ['END_SPIRIT_PHASE', 'END_FAST_POWERS', 'END_INVADERS', 'END_SLOW_POWERS', 'TIME_PASSES'],
+    input: { startingBlight: 2 },
+    showContext: true,
+  }),
+);
+
+step(
+  'Actions — changing context on a transition',
+  `<p>Context never mutates directly; a transition runs an <strong>action</strong>, and the
+   <code>assign</code> action computes the next context from the current one. You name
+   actions in <code>setup()</code> and reference them by string in the machine — keeps the
+   wiring readable and reusable.</p>
+   <p>Below, <code>TIME_PASSES</code> now increments the round, and a new
+   <code>RAVAGE</code> event inside the invader phase adds blight. Watch the context line
+   as you tap.</p>`,
+  `const machine = setup({
+  types: { /* …as before… */ },
   actions: {
     addBlight: assign({
       blightCount: ({ context }) => context.blightCount + 1,
@@ -213,265 +259,311 @@ export const gameRoundMachine = setup({
       round: ({ context }) => context.round + 1,
     }),
   },
+}).createMachine({
+  // …
+  invaders: {
+    on: { RAVAGE: { target: 'slowPowers', actions: 'addBlight' } },
+  },
+  timePasses: {
+    on: { TIME_PASSES: { target: 'spiritPhase', actions: 'nextRound' } },
+  },
+});`,
+  () => ({
+    machine: setup({
+      actions: {
+        addBlight: assign({ blightCount: ({ context }) => context.blightCount + 1 }),
+        nextRound: assign({ round: ({ context }) => context.round + 1 }),
+      },
+    }).createMachine({
+      id: 'round',
+      context: { round: 1, blightCount: 0 },
+      initial: 'spiritPhase',
+      states: {
+        spiritPhase: { on: { END_SPIRIT_PHASE: 'fastPowers' } },
+        fastPowers: { on: { END_FAST_POWERS: 'invaders' } },
+        invaders: { on: { RAVAGE: { target: 'slowPowers', actions: 'addBlight' } } },
+        slowPowers: { on: { END_SLOW_POWERS: 'timePasses' } },
+        timePasses: { on: { TIME_PASSES: { target: 'spiritPhase', actions: 'nextRound' } } },
+      },
+    }),
+    events: ['END_SPIRIT_PHASE', 'END_FAST_POWERS', 'RAVAGE', 'END_SLOW_POWERS', 'TIME_PASSES'],
+    showContext: true,
+  }),
+);
+
+step(
+  'Guards — conditional transitions',
+  `<p>Rule: the fifth blight destroys the island. A <strong>guard</strong> is a boolean
+   check on a transition. Give <code>RAVAGE</code> an <em>array</em> of transitions —
+   XState takes the first whose guard passes. If the island already has 4 blight, ravaging
+   goes to a <code>gameOver</code> state instead; <code>type: 'final'</code> marks the
+   machine as done.</p>
+   <p>The demo starts at 3 blight. Ravage twice across two rounds and watch the guard fire.</p>`,
+  `const machine = setup({
+  // …types, actions…
   guards: {
     islandWouldBeDestroyed: ({ context }) => context.blightCount >= 4,
   },
 }).createMachine({
-  id: 'gameRound',
-  context: ({ input }) => ({
-    round: 1,
-    blightCount: input.startingBlight,
-  }),
-  initial: 'spiritPhase',
-  states: {
-    spiritPhase: {
-      on: { END_SPIRIT_PHASE: { target: 'fastPowers' } },
+  // …
+  invaders: {
+    on: {
+      RAVAGE: [
+        { guard: 'islandWouldBeDestroyed', target: 'gameOver', actions: 'addBlight' },
+        { target: 'slowPowers', actions: 'addBlight' }, // fallback
+      ],
     },
-    fastPowers: {
-      on: { END_FAST_POWERS: { target: 'invaderPhase' } },
-    },
-    invaderPhase: {
-      initial: 'ravage',
+  },
+  gameOver: { type: 'final' },
+});`,
+  () => ({
+    machine: setup({
+      actions: {
+        addBlight: assign({ blightCount: ({ context }) => context.blightCount + 1 }),
+        nextRound: assign({ round: ({ context }) => context.round + 1 }),
+      },
+      guards: {
+        islandWouldBeDestroyed: ({ context }) => context.blightCount >= 4,
+      },
+    }).createMachine({
+      id: 'round',
+      context: { round: 1, blightCount: 3 },
+      initial: 'spiritPhase',
       states: {
-        ravage: {
+        spiritPhase: { on: { END_SPIRIT_PHASE: 'fastPowers' } },
+        fastPowers: { on: { END_FAST_POWERS: 'invaders' } },
+        invaders: {
           on: {
             RAVAGE: [
-              {
-                guard: 'islandWouldBeDestroyed',
-                target: '#gameRound.gameOver',
-                actions: 'addBlight',
-              },
-              { target: 'build', actions: 'addBlight' },
+              { guard: 'islandWouldBeDestroyed', target: 'gameOver', actions: 'addBlight' },
+              { target: 'slowPowers', actions: 'addBlight' },
             ],
           },
         },
-        build: {
-          on: { BUILD: { target: 'explore' } },
-        },
-        explore: {
-          on: { EXPLORE: { target: '#gameRound.slowPowers' } },
-        },
+        slowPowers: { on: { END_SLOW_POWERS: 'timePasses' } },
+        timePasses: { on: { TIME_PASSES: { target: 'spiritPhase', actions: 'nextRound' } } },
+        gameOver: { type: 'final' },
+      },
+    }),
+    events: ['END_SPIRIT_PHASE', 'END_FAST_POWERS', 'RAVAGE', 'END_SLOW_POWERS', 'TIME_PASSES'],
+    showContext: true,
+  }),
+);
+
+step(
+  'Nested states — the invader phase within the round',
+  `<p>The invader phase isn't one moment — it's its own little sequence:
+   <code>ravage → build → explore</code>. A state can contain child states with their own
+   <code>initial</code>. The state value then becomes an object like
+   <code>{ invaderPhase: 'build' }</code>.</p>
+   <p>To jump from a child state to a <em>top-level</em> state, target by id:
+   <code>'#round.slowPowers'</code>. This is the complete game machine the app uses —
+   every tap in the finished app sends one of these events, and the narrator will speak
+   on every transition.</p>`,
+  `invaderPhase: {
+  initial: 'ravage',
+  states: {
+    ravage: {
+      on: {
+        RAVAGE: [
+          { guard: 'islandWouldBeDestroyed',
+            target: '#round.gameOver', actions: 'addBlight' },
+          { target: 'build', actions: 'addBlight' },
+        ],
       },
     },
-    slowPowers: {
-      on: { END_SLOW_POWERS: { target: 'timePasses' } },
-    },
-    timePasses: {
-      on: { TIME_PASSES: { target: 'spiritPhase', actions: 'nextRound' } },
-    },
-    gameOver: {
-      type: 'final',
-    },
+    build:   { on: { BUILD: 'explore' } },
+    explore: { on: { EXPLORE: '#round.slowPowers' } },
   },
+},`,
+  () => ({
+    machine: setup({
+      actions: {
+        addBlight: assign({ blightCount: ({ context }) => context.blightCount + 1 }),
+        nextRound: assign({ round: ({ context }) => context.round + 1 }),
+      },
+      guards: {
+        islandWouldBeDestroyed: ({ context }) => context.blightCount >= 4,
+      },
+    }).createMachine({
+      id: 'round',
+      context: { round: 1, blightCount: 0 },
+      initial: 'spiritPhase',
+      states: {
+        spiritPhase: { on: { END_SPIRIT_PHASE: 'fastPowers' } },
+        fastPowers: { on: { END_FAST_POWERS: 'invaderPhase' } },
+        invaderPhase: {
+          initial: 'ravage',
+          states: {
+            ravage: {
+              on: {
+                RAVAGE: [
+                  { guard: 'islandWouldBeDestroyed', target: '#round.gameOver', actions: 'addBlight' },
+                  { target: 'build', actions: 'addBlight' },
+                ],
+              },
+            },
+            build: { on: { BUILD: 'explore' } },
+            explore: { on: { EXPLORE: '#round.slowPowers' } },
+          },
+        },
+        slowPowers: { on: { END_SLOW_POWERS: 'timePasses' } },
+        timePasses: { on: { TIME_PASSES: { target: 'spiritPhase', actions: 'nextRound' } } },
+        gameOver: { type: 'final' },
+      },
+    }),
+    events: ['END_SPIRIT_PHASE', 'END_FAST_POWERS', 'RAVAGE', 'BUILD', 'EXPLORE', 'END_SLOW_POWERS', 'TIME_PASSES'],
+    showContext: true,
+  }),
+);
+
+step(
+  'The agent — where the model is configured',
+  `<p>Now the part you asked about. The narrator is a
+   <code>@statelyai/agent</code> v2 agent. All model config lives in one
+   <code>createAgent()</code> call:</p>
+   <ul>
+     <li><code>model</code> — an AI SDK model instance. <code>anthropic('claude-sonnet-5')</code>
+       comes from <code>@ai-sdk/anthropic</code>; swap the string to change models in one place.</li>
+     <li><code>description</code> — doubles as the default <strong>system prompt</strong>.
+       This is where the dreamlike narrator voice lives.</li>
+     <li><code>events</code> — Zod schemas for every event the agent may send or observe.
+       The <code>.describe()</code> strings aren't comments — they're shipped to the model
+       so it understands the game's vocabulary.</li>
+   </ul>`,
+  `import { createAgent } from '@statelyai/agent';
+import { anthropic } from '@ai-sdk/anthropic';
+import { z } from 'zod';
+
+export const narrator = createAgent({
+  id: 'island-narrator',
+  description:
+    'You are the dreaming voice of the island. Narrate each game ' +
+    'event in one or two evocative, unsettling sentences, in the ' +
+    'register of Spirit Island lore. Never break character.',
+  model: anthropic('claude-sonnet-5'),
+  events: {
+    RAVAGE: z.object({
+      land: z.string().describe('The land being ravaged, e.g. "the wetlands"'),
+    }),
+    BUILD: z.object({
+      structure: z.enum(['town', 'city']).describe('What the invaders build'),
+    }),
+    EXPLORE: z.object({}),
+    // …one schema per game event
+  },
+});`,
+  null,
+);
+
+step(
+  'Generating narration with the wrapped model',
+  `<p>In v2 the agent doesn't generate text itself — you use the AI SDK's own
+   <code>generateText</code> / <code>streamText</code>, but pass it
+   <code>agent.wrap(model)</code>. The wrapper injects the agent's system prompt and
+   records every exchange into the agent's memory, which later steps use for
+   observations and feedback.</p>
+   <p>This runs on a tiny server route (Hono), so the API key stays in
+   <code>.env.local</code> on the server — the phone only ever talks to
+   <code>/api/narrate</code>.</p>
+   <p>That's the whole pipeline: <strong>tap → machine transition → agent observes →
+   wrapped model narrates → text streams to your screen</strong>. Next we wire it
+   together in the real app.</p>`,
+  `// server/narrate.ts (Hono route — the key never reaches the browser)
+import { generateText } from 'ai';
+import { narrator } from './agent';
+import { anthropic } from '@ai-sdk/anthropic';
+
+app.post('/api/narrate', async (c) => {
+  const { event, state } = await c.req.json();
+
+  const { text } = await generateText({
+    model: narrator.wrap(anthropic('claude-sonnet-5')),
+    prompt: \`The game moved to \${state}. Narrate this event: \${event}\`,
+  });
+
+  return c.json({ narration: text });
+});`,
+  null,
+);
+
+// ── rendering ──────────────────────────────────────────────────────────
+const stepsEl = document.getElementById('steps');
+const navEl = document.getElementById('nav');
+
+steps.forEach((s, i) => {
+  const id = `step-${i + 1}`;
+  const a = document.createElement('a');
+  a.href = `#${id}`;
+  a.textContent = `${i + 1}. ${s.title.split(' — ')[0]}`;
+  navEl.append(a);
+
+  const section = document.createElement('section');
+  section.id = id;
+  const h = document.createElement('h2');
+  h.innerHTML = `<span class="stepno">Step ${i + 1} of ${steps.length}</span>`;
+  h.append(s.title);
+  section.append(h);
+  const prose = document.createElement('div');
+  prose.innerHTML = s.html;
+  section.append(prose);
+  const pre = document.createElement('pre');
+  pre.textContent = s.code;
+  section.append(pre);
+  if (s.demo) section.append(buildDemo(s.demo));
+  stepsEl.append(section);
 });
-</script>
 
-<script type="module">
-// xstate 5.32.5 + sucrase, bundled from the repo's own node_modules —
-// the page works offline-ish and always matches the exercise's version.
-const XSTATE_URL = new URL('./vendor/xstate.js', location.href).href;
-const SUCRASE_URL = new URL('./vendor/sucrase.js', location.href).href;
-const STORE_KEY = 'sin-ex01-code';
+function buildDemo(factory) {
+  const wrap = document.createElement('div');
+  wrap.className = 'demo';
+  wrap.innerHTML = '<div class="label">Live demo — tap the events</div>';
+  const pill = document.createElement('div');
+  pill.className = 'statepill';
+  const ctx = document.createElement('div');
+  ctx.className = 'ctx';
+  const btns = document.createElement('div');
+  btns.className = 'btns';
+  wrap.append(pill, ctx, btns);
 
-const $ = (id) => document.getElementById(id);
-const editor = $('editor');
-const statusEl = $('status');
-const resultsEl = $('results');
-const summaryEl = $('summary');
+  let cfg, actor;
+  const buttons = new Map();
 
-const problemCode = $('problem-code').textContent.trim() + '\n';
-const solutionCode = $('solution-code').textContent.trim() + '\n';
-
-editor.value = localStorage.getItem(STORE_KEY) ?? problemCode;
-editor.addEventListener('input', () => localStorage.setItem(STORE_KEY, editor.value));
-
-$('reset').onclick = () => {
-  if (!confirm('Replace your code with the original problem?')) return;
-  editor.value = problemCode;
-  localStorage.setItem(STORE_KEY, editor.value);
-};
-$('solution').onclick = () => {
-  if (!confirm('Teacher says: only after an honest attempt. Reveal the solution?')) return;
-  editor.value = solutionCode;
-  localStorage.setItem(STORE_KEY, editor.value);
-};
-
-// ── tiny test framework ────────────────────────────────────────────────
-function deepEqual(a, b) {
-  if (Object.is(a, b)) return true;
-  if (typeof a !== 'object' || typeof b !== 'object' || a === null || b === null) return false;
-  if (Array.isArray(a) !== Array.isArray(b)) return false;
-  const ka = Object.keys(a), kb = Object.keys(b);
-  if (ka.length !== kb.length) return false;
-  return ka.every((k) => deepEqual(a[k], b[k]));
-}
-const show = (v) => { try { return JSON.stringify(v); } catch { return String(v); } };
-function expect(actual) {
-  return {
-    toBe(expected) {
-      if (!Object.is(actual, expected))
-        throw new Error(`expected ${show(expected)}\nreceived ${show(actual)}`);
-    },
-    toEqual(expected) {
-      if (!deepEqual(actual, expected))
-        throw new Error(`expected ${show(expected)}\nreceived ${show(actual)}`);
-    },
+  const render = () => {
+    const snap = actor.getSnapshot();
+    const value = typeof snap.value === 'string' ? snap.value : JSON.stringify(snap.value);
+    const done = snap.status === 'done';
+    pill.textContent = done ? `${value} — the island is lost` : value;
+    pill.classList.toggle('done', done);
+    ctx.textContent = cfg.showContext && snap.context
+      ? `context: ${JSON.stringify(snap.context)}` : '';
+    for (const [type, b] of buttons) b.disabled = !snap.can({ type });
   };
-}
 
-// ── the same spec as exercises/01-xstate-warmup/machine.test.ts ────────
-function buildTests(createActor, machine) {
-  const startGame = (startingBlight = 0) => {
-    const actor = createActor(machine, { input: { startingBlight } });
+  const boot = () => {
+    actor?.stop();
+    cfg = factory();
+    actor = createActor(cfg.machine, cfg.input ? { input: cfg.input } : undefined);
+    if (!buttons.size) {
+      for (const type of cfg.events) {
+        const b = document.createElement('button');
+        b.textContent = type.replaceAll('_', ' ');
+        b.onclick = () => { actor.send({ type }); render(); };
+        buttons.set(type, b);
+        btns.append(b);
+      }
+      const r = document.createElement('button');
+      r.textContent = '↺ reset';
+      r.className = 'reset';
+      r.onclick = boot;
+      btns.append(r);
+    }
     actor.start();
-    return actor;
+    render();
   };
-  const advanceToRavage = (actor) => {
-    actor.send({ type: 'END_SPIRIT_PHASE' });
-    actor.send({ type: 'END_FAST_POWERS' });
-  };
-
-  return [
-    ['the shape of a round', 'begins in the spirit phase on round 1', () => {
-      const actor = startGame();
-      expect(actor.getSnapshot().value).toBe('spiritPhase');
-      expect(actor.getSnapshot().context).toEqual({ round: 1, blightCount: 0 });
-    }],
-    ['the shape of a round', 'starts with the blight the island was dealt as input', () => {
-      const actor = startGame(3);
-      expect(actor.getSnapshot().context.blightCount).toBe(3);
-    }],
-    ['the shape of a round', 'moves spiritPhase → fastPowers → invaderPhase(ravage)', () => {
-      const actor = startGame();
-      actor.send({ type: 'END_SPIRIT_PHASE' });
-      expect(actor.getSnapshot().value).toBe('fastPowers');
-      actor.send({ type: 'END_FAST_POWERS' });
-      expect(actor.getSnapshot().value).toEqual({ invaderPhase: 'ravage' });
-    }],
-    ['the shape of a round', 'steps through the invader phase: ravage → build → explore', () => {
-      const actor = startGame();
-      advanceToRavage(actor);
-      actor.send({ type: 'RAVAGE' });
-      expect(actor.getSnapshot().value).toEqual({ invaderPhase: 'build' });
-      actor.send({ type: 'BUILD' });
-      expect(actor.getSnapshot().value).toEqual({ invaderPhase: 'explore' });
-    }],
-    ['the shape of a round', 'exploring ends the invader phase, landing on slowPowers', () => {
-      const actor = startGame();
-      advanceToRavage(actor);
-      actor.send({ type: 'RAVAGE' });
-      actor.send({ type: 'BUILD' });
-      actor.send({ type: 'EXPLORE' });
-      expect(actor.getSnapshot().value).toBe('slowPowers');
-    }],
-    ['blight', 'ravaging adds one blight to the island', () => {
-      const actor = startGame();
-      advanceToRavage(actor);
-      actor.send({ type: 'RAVAGE' });
-      expect(actor.getSnapshot().context.blightCount).toBe(1);
-    }],
-    ['blight', 'the fifth blight destroys the island', () => {
-      const actor = startGame(4);
-      advanceToRavage(actor);
-      actor.send({ type: 'RAVAGE' });
-      const snapshot = actor.getSnapshot();
-      expect(snapshot.value).toBe('gameOver');
-      expect(snapshot.context.blightCount).toBe(5);
-      expect(snapshot.status).toBe('done');
-    }],
-    ['blight', 'four blight is survivable — the round continues', () => {
-      const actor = startGame(3);
-      advanceToRavage(actor);
-      actor.send({ type: 'RAVAGE' });
-      expect(actor.getSnapshot().value).toEqual({ invaderPhase: 'build' });
-      expect(actor.getSnapshot().context.blightCount).toBe(4);
-    }],
-    ['time passes', 'loops back to the spirit phase and increments the round', () => {
-      const actor = startGame();
-      advanceToRavage(actor);
-      actor.send({ type: 'RAVAGE' });
-      actor.send({ type: 'BUILD' });
-      actor.send({ type: 'EXPLORE' });
-      actor.send({ type: 'END_SLOW_POWERS' });
-      expect(actor.getSnapshot().value).toBe('timePasses');
-      actor.send({ type: 'TIME_PASSES' });
-      expect(actor.getSnapshot().value).toBe('spiritPhase');
-      expect(actor.getSnapshot().context.round).toBe(2);
-    }],
-    ['statechart discipline', 'ignores events that are out of phase (no ravaging during the spirit phase)', () => {
-      const actor = startGame();
-      actor.send({ type: 'RAVAGE' });
-      expect(actor.getSnapshot().value).toBe('spiritPhase');
-      expect(actor.getSnapshot().context.blightCount).toBe(0);
-    }],
-  ];
+  boot();
+  return wrap;
 }
-
-// ── toolchain ──────────────────────────────────────────────────────────
-let transform, createActor;
-const runBtn = $('run');
-runBtn.disabled = true;
-try {
-  [{ transform }, { createActor }] = await Promise.all([
-    import(SUCRASE_URL),
-    import(XSTATE_URL),
-  ]);
-  statusEl.textContent = 'Ready. Edit the code, then run the tests.';
-  runBtn.disabled = false;
-} catch (e) {
-  statusEl.innerHTML = '';
-  resultsEl.innerHTML = `<div class="fatal">Could not load the toolchain  — reload the page.\n\n${e}</div>`;
-}
-
-runBtn.onclick = async () => {
-  resultsEl.innerHTML = '';
-  summaryEl.textContent = '';
-  summaryEl.className = '';
-  statusEl.textContent = 'Running…';
-  let machine;
-  try {
-    const js = transform(editor.value, { transforms: ['typescript'] }).code
-      .replace(/from\s+(['"])xstate\1/g, `from '${XSTATE_URL}'`);
-    const url = URL.createObjectURL(new Blob([js], { type: 'text/javascript' }));
-    let mod;
-    try { mod = await import(url); } finally { URL.revokeObjectURL(url); }
-    machine = mod.gameRoundMachine;
-    if (!machine) throw new Error("Your file must `export const gameRoundMachine = …`");
-  } catch (e) {
-    statusEl.textContent = '';
-    resultsEl.innerHTML = `<div class="fatal">Your code did not compile/load:\n\n${e?.message ?? e}</div>`;
-    return;
-  }
-
-  let passed = 0;
-  let lastGroup = '';
-  for (const [group, name, fn] of buildTests(createActor, machine)) {
-    if (group !== lastGroup) {
-      lastGroup = group;
-      resultsEl.insertAdjacentHTML('beforeend', `<div class="group"></div>`);
-      resultsEl.lastChild.textContent = group;
-    }
-    const div = document.createElement('div');
-    let err = null;
-    try { fn(); passed++; } catch (e) { err = e; }
-    div.className = `test ${err ? 'fail' : 'pass'}`;
-    div.innerHTML = `<span class="mark">${err ? '❌' : '✅'}</span>`;
-    div.append(name);
-    if (err) {
-      const pre = document.createElement('span');
-      pre.className = 'err';
-      pre.textContent = err.message ?? String(err);
-      div.append(pre);
-    }
-    resultsEl.append(div);
-  }
-  const total = resultsEl.querySelectorAll('.test').length;
-  statusEl.textContent = '';
-  summaryEl.textContent = passed === total
-    ? `🌒 ${passed}/${total} — the island dreams on. Exercise complete.`
-    : `${passed}/${total} passing`;
-  if (passed === total) summaryEl.className = 'allpass';
-};
 </script>
 </body>
 </html>

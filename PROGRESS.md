@@ -1,5 +1,13 @@
 # Spirit Island Narrator — Course Progress
 
+> **Format change (session 1):** switched from test-gated exercises to a guided
+> build-it-up walkthrough at the GitHub Pages site (`playground/index.html`) —
+> each step adds one concept (states → events → context → actions → guards →
+> nested states → agent/model config) with a live tappable demo. The vitest
+> exercises remain in `exercises/` and the sandbox editor at
+> `playground/practice.html` for optional practice, but they no longer gate
+> progress.
+
 | # | Exercise | Status | Takeaway |
 |---|----------|--------|----------|
 | 00 | Repo setup | ✅ done | The agent alpha pins `ai@^4` and Zod 3 — the installed `.d.ts` beats the docs, always. |
